@@ -304,8 +304,19 @@ textarea:focus {
 
 <aside class="sidebar">
 
-    <button class="active"
-            onclick="showExperiment(1,this)">
+    <button class="active" onclick="showExperiment(7,this)">
+        Experiment 7 — Dijikstara
+    </button>
+
+    <button onclick="showExperiment(8,this)">
+        Experiment 8 — Character Stuffing
+    </button>
+
+    <button onclick="showExperiment(9,this)">
+        Experiment 9 — Leaky Bucket Algorithm
+    </button>
+
+    <button onclick="showExperiment(1,this)">
         Experiment 1 — Framing
     </button>
 
@@ -327,18 +338,6 @@ textarea:focus {
 
     <button onclick="showExperiment(6,this)">
         Experiment 6 — Distance Vector
-    </button>
-
-    <button onclick="showExperiment(7,this)">
-        Experiment 7 — Dijikstara
-    </button>
-
-    <button onclick="showExperiment(8,this)">
-        Experiment 8 — Character Stuffing
-    </button>
-
-    <button onclick="showExperiment(9,this)">
-        Experiment 9 — Leaky Bucket Algorithm
     </button>
 
 </aside>
@@ -425,7 +424,168 @@ int main() {
      EXPERIMENT 1
 ===================================================== -->
 
-<section id="exp1" class="experiment active">
+<section id="exp7" class="experiment active">
+
+<div class="card">
+
+<h2>Experiment 7 — Dijikstara</h2>
+
+<div class="question-box">
+<div class="question-title">Question</div>
+Write a C program to implement Dijkstra's shortest path algorithm using a cost matrix.
+</div>
+
+<h3>Program</h3>
+<div class="code-box">
+<pre id="code7">#include &lt;stdio.h&gt;
+int main() {
+    int n,g[10][10],d[10],v[10]={0},s,u,min;
+    scanf("%d",&amp;n);
+    for(int i=0;i&lt;n;i++)
+        for(int j=0;j&lt;n;j++) scanf("%d",&amp;g[i][j]);
+    scanf("%d",&amp;s);
+
+    for(int i=0;i&lt;n;i++) d[i]=999;
+    d[s]=0;
+
+    for(int k=0;k&lt;n;k++) {
+        min=999; u=-1;
+        for(int i=0;i&lt;n;i++)
+            if(!v[i] &amp;&amp; d[i]&lt;min) min=d[i],u=i;
+        if(u==-1) break;
+        v[u]=1;
+        for(int j=0;j&lt;n;j++)
+            if(g[u][j]&gt;0 &amp;&amp; !v[j] &amp;&amp; d[u]+g[u][j]&lt;d[j])
+                d[j]=d[u]+g[u][j];
+    }
+
+    printf("Shortest distances:\n");
+    for(int i=0;i&lt;n;i++) printf("%d ",d[i]);
+    return 0;
+}</pre>
+</div>
+
+<h3>Input</h3>
+<div class="output" id="input7">4
+0 2 0 1
+2 0 3 0
+0 3 0 4
+1 0 4 0
+0</div>
+
+<h3>Output</h3>
+<div class="output" id="output7">Shortest distances:
+0 2 5 1</div>
+
+<div class="buttons">
+<button class="copy-btn" onclick="copyCode('code7')">💻 Copy Code</button>
+<button class="copy-btn" onclick="copyOutput('input7')">📥 Copy Input</button>
+<button class="copy-btn" onclick="copyOutput('output7')">📤 Copy Output</button>
+</div>
+
+</div>
+</section>
+
+<section id="exp8" class="experiment">
+<div class="card">
+<h2>Experiment 8 — Character Stuffing</h2>
+
+<div class="question-box">
+<div class="question-title">Question</div>
+Write a C program to implement Character Stuffing using DLE STX and DLE ETX. Duplicate DLE characters appearing in the data.
+</div>
+
+<h3>Program</h3>
+<div class="code-box">
+<pre id="code8">#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+int main() {
+    char s[100];
+    scanf("%99s",s);
+
+    printf("DLE STX ");
+    for(int i=0;s[i];i++) {
+        if(strncmp(s+i,"DLE",3)==0) {
+            printf("DLEDLE");
+            i+=2;
+        } else printf("%c",s[i]);
+    }
+    printf(" DLE ETX");
+    return 0;
+}</pre>
+</div>
+
+<h3>Input</h3>
+<div class="output" id="input8">HELLO</div>
+
+<h3>Output</h3>
+<div class="output" id="output8">DLE STX HELLO DLE ETX</div>
+
+<div class="buttons">
+<button class="copy-btn" onclick="copyCode('code8')">💻 Copy Code</button>
+<button class="copy-btn" onclick="copyOutput('input8')">📥 Copy Input</button>
+<button class="copy-btn" onclick="copyOutput('output8')">📤 Copy Output</button>
+</div>
+</div>
+</section>
+
+<section id="exp9" class="experiment">
+<div class="card">
+<h2>Experiment 9 — Leaky Bucket Algorithm</h2>
+
+<div class="question-box">
+<div class="question-title">Question</div>
+Write a C program to implement the Leaky Bucket Algorithm for traffic shaping and packet transmission.
+</div>
+
+<h3>Program</h3>
+<div class="code-box">
+<pre id="code9">#include &lt;stdio.h&gt;
+int main() {
+    int n,p[20],cap,rate,b=0;
+    scanf("%d",&amp;n);
+    for(int i=0;i&lt;n;i++) scanf("%d",&amp;p[i]);
+    scanf("%d%d",&amp;cap,&amp;rate);
+
+    for(int i=0;i&lt;n;i++) {
+        if(b+p[i]&lt;=cap) b+=p[i];
+        else printf("Packet dropped: %d\n",p[i]);
+
+        int sent=b&lt;rate?b:rate;
+        b-=sent;
+        printf("Sent: %d Remaining: %d\n",sent,b);
+    }
+
+    while(b&gt;0) {
+        int sent=b&lt;rate?b:rate;
+        b-=sent;
+        printf("Sent: %d Remaining: %d\n",sent,b);
+    }
+    return 0;
+}</pre>
+</div>
+
+<h3>Input</h3>
+<div class="output" id="input9">3
+4 6 8
+10 3</div>
+
+<h3>Output</h3>
+<div class="output" id="output9">Sent: 3 Remaining: 1
+Sent: 3 Remaining: 4
+Packet dropped: 8
+Sent: 3 Remaining: 1
+Sent: 1 Remaining: 0</div>
+
+<div class="buttons">
+<button class="copy-btn" onclick="copyCode('code9')">💻 Copy Code</button>
+<button class="copy-btn" onclick="copyOutput('input9')">📥 Copy Input</button>
+<button class="copy-btn" onclick="copyOutput('output9')">📤 Copy Output</button>
+</div>
+</div>
+</section>
+
+<section id="exp1" class="experiment">
 
 <div class="card">
 
@@ -738,11 +898,6 @@ int main()
 
 </section>
 
-
-<!-- =====================================================
-     EXPERIMENT 2
-===================================================== -->
-
 <section id="exp2" class="experiment">
 
 <div class="card">
@@ -861,11 +1016,6 @@ int main()
 
 </section>
 
-
-<!-- =====================================================
-     EXPERIMENT 3
-===================================================== -->
-
 <section id="exp3" class="experiment">
 
 <div class="card">
@@ -976,11 +1126,6 @@ int main()
 </div>
 
 </section>
-
-
-<!-- =====================================================
-     EXPERIMENT 4
-===================================================== -->
 
 <section id="exp4" class="experiment">
 
@@ -1133,11 +1278,6 @@ int main()
 
 </section>
 
-
-<!-- =====================================================
-     EXPERIMENT 5
-===================================================== -->
-
 <section id="exp5" class="experiment">
 
 <div class="card">
@@ -1239,11 +1379,6 @@ int main()
 </div>
 
 </section>
-
-
-<!-- =====================================================
-     EXPERIMENT 6
-===================================================== -->
 
 <section id="exp6" class="experiment">
 
@@ -1372,186 +1507,6 @@ int main()
 
 </div>
 
-</section>
-
-
-
-<!-- =====================================================
-     EXPERIMENT 7
-     CRC-12 / CRC-16 / CRC-CCITT
-===================================================== -->
-
-<section id="exp7" class="experiment">
-
-<div class="card">
-
-<h2>Experiment 7 — Dijikstara</h2>
-
-<div class="question-box">
-<div class="question-title">Question</div>
-Write a C program to implement Dijkstra's shortest path algorithm using a cost matrix.
-</div>
-
-<h3>Program</h3>
-<div class="code-box">
-<pre id="code7">#include &lt;stdio.h&gt;
-int main() {
-    int n,g[10][10],d[10],v[10]={0},s,u,min;
-    scanf("%d",&amp;n);
-    for(int i=0;i&lt;n;i++)
-        for(int j=0;j&lt;n;j++) scanf("%d",&amp;g[i][j]);
-    scanf("%d",&amp;s);
-
-    for(int i=0;i&lt;n;i++) d[i]=999;
-    d[s]=0;
-
-    for(int k=0;k&lt;n;k++) {
-        min=999; u=-1;
-        for(int i=0;i&lt;n;i++)
-            if(!v[i] &amp;&amp; d[i]&lt;min) min=d[i],u=i;
-        if(u==-1) break;
-        v[u]=1;
-        for(int j=0;j&lt;n;j++)
-            if(g[u][j]&gt;0 &amp;&amp; !v[j] &amp;&amp; d[u]+g[u][j]&lt;d[j])
-                d[j]=d[u]+g[u][j];
-    }
-
-    printf("Shortest distances:\n");
-    for(int i=0;i&lt;n;i++) printf("%d ",d[i]);
-    return 0;
-}</pre>
-</div>
-
-<h3>Input</h3>
-<div class="output" id="input7">4
-0 2 0 1
-2 0 3 0
-0 3 0 4
-1 0 4 0
-0</div>
-
-<h3>Output</h3>
-<div class="output" id="output7">Shortest distances:
-0 2 5 1</div>
-
-<div class="buttons">
-<button class="copy-btn" onclick="copyCode('code7')">💻 Copy Code</button>
-<button class="copy-btn" onclick="copyOutput('input7')">📥 Copy Input</button>
-<button class="copy-btn" onclick="copyOutput('output7')">📤 Copy Output</button>
-</div>
-
-</div>
-</section>
-
-
-<!-- =====================================================
-     EXPERIMENT 8
-     CHARACTER STUFFING
-===================================================== -->
-
-<section id="exp8" class="experiment">
-<div class="card">
-<h2>Experiment 8 — Character Stuffing</h2>
-
-<div class="question-box">
-<div class="question-title">Question</div>
-Write a C program to implement Character Stuffing using DLE STX and DLE ETX. Duplicate DLE characters appearing in the data.
-</div>
-
-<h3>Program</h3>
-<div class="code-box">
-<pre id="code8">#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-int main() {
-    char s[100];
-    scanf("%99s",s);
-
-    printf("DLE STX ");
-    for(int i=0;s[i];i++) {
-        if(strncmp(s+i,"DLE",3)==0) {
-            printf("DLEDLE");
-            i+=2;
-        } else printf("%c",s[i]);
-    }
-    printf(" DLE ETX");
-    return 0;
-}</pre>
-</div>
-
-<h3>Input</h3>
-<div class="output" id="input8">HELLO</div>
-
-<h3>Output</h3>
-<div class="output" id="output8">DLE STX HELLO DLE ETX</div>
-
-<div class="buttons">
-<button class="copy-btn" onclick="copyCode('code8')">💻 Copy Code</button>
-<button class="copy-btn" onclick="copyOutput('input8')">📥 Copy Input</button>
-<button class="copy-btn" onclick="copyOutput('output8')">📤 Copy Output</button>
-</div>
-</div>
-</section>
-
-
-<!-- =====================================================
-     EXPERIMENT 9
-     LEAKY BUCKET ALGORITHM
-===================================================== -->
-
-<section id="exp9" class="experiment">
-<div class="card">
-<h2>Experiment 9 — Leaky Bucket Algorithm</h2>
-
-<div class="question-box">
-<div class="question-title">Question</div>
-Write a C program to implement the Leaky Bucket Algorithm for traffic shaping and packet transmission.
-</div>
-
-<h3>Program</h3>
-<div class="code-box">
-<pre id="code9">#include &lt;stdio.h&gt;
-int main() {
-    int n,p[20],cap,rate,b=0;
-    scanf("%d",&amp;n);
-    for(int i=0;i&lt;n;i++) scanf("%d",&amp;p[i]);
-    scanf("%d%d",&amp;cap,&amp;rate);
-
-    for(int i=0;i&lt;n;i++) {
-        if(b+p[i]&lt;=cap) b+=p[i];
-        else printf("Packet dropped: %d\n",p[i]);
-
-        int sent=b&lt;rate?b:rate;
-        b-=sent;
-        printf("Sent: %d Remaining: %d\n",sent,b);
-    }
-
-    while(b&gt;0) {
-        int sent=b&lt;rate?b:rate;
-        b-=sent;
-        printf("Sent: %d Remaining: %d\n",sent,b);
-    }
-    return 0;
-}</pre>
-</div>
-
-<h3>Input</h3>
-<div class="output" id="input9">3
-4 6 8
-10 3</div>
-
-<h3>Output</h3>
-<div class="output" id="output9">Sent: 3 Remaining: 1
-Sent: 3 Remaining: 4
-Packet dropped: 8
-Sent: 3 Remaining: 1
-Sent: 1 Remaining: 0</div>
-
-<div class="buttons">
-<button class="copy-btn" onclick="copyCode('code9')">💻 Copy Code</button>
-<button class="copy-btn" onclick="copyOutput('input9')">📥 Copy Input</button>
-<button class="copy-btn" onclick="copyOutput('output9')">📤 Copy Output</button>
-</div>
-</div>
 </section>
 
 </main>
